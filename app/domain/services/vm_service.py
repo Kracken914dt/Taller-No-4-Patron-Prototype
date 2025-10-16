@@ -43,6 +43,9 @@ class VMService:
             vm_config = data.params.model_dump()
             virtual_machine = abstract_factory.create_virtual_machine(data.name, vm_config)
 
+            # Guardar el producto original para permitir clonación (Prototype Pattern)
+            self.repo.save_product(virtual_machine)
+
             # Convertir a VMDTO
             vm = VMDTO(
                 id=virtual_machine.resource_id,
@@ -113,6 +116,9 @@ class VMService:
             provider_enum = self._to_cloud_provider(data.provider)
             factory = create_cloud_factory(provider_enum)
             vm = factory.create_virtual_machine(data.name, vm_config)
+
+            # Guardar el producto original para permitir clonación (Prototype Pattern)
+            self.repo.save_product(vm)
 
             dto = VMDTO(
                 id=vm.resource_id,

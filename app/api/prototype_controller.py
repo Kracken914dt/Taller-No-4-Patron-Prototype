@@ -177,40 +177,40 @@ async def list_prototypes(category: Optional[PrototypeCategory] = Query(None, de
         )
 
 
-@router.post("/prototype/search",
-            response_model=PrototypeSearchResponse,
-            summary="Buscar prototipos",
-            description="Busca prototipos basado en criterios específicos como texto, categoría y tags")
-async def search_prototypes(request: PrototypeSearchRequest):
-    """
-    Busca prototipos basándose en diferentes criterios de búsqueda.
-    
-    Permite combinar búsqueda por texto libre, categoría específica y tags.
-    """
-    try:
-        category_filter = request.category.value if request.category else None
-        
-        results = prototype_manager.search_prototypes(
-            query=request.query,
-            category=category_filter,
-            tags=request.tags
-        )
-        
-        logger.info(f"Search completed: {len(results)} results for query '{request.query}'")
-        
-        return PrototypeSearchResponse(
-            success=True,
-            query=request.query,
-            results_count=len(results),
-            prototypes=results
-        )
-        
-    except Exception as e:
-        logger.error(f"Error searching prototypes: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to search prototypes: {str(e)}"
-        )
+# @router.post("/prototype/search",
+#             response_model=PrototypeSearchResponse,
+#             summary="Buscar prototipos",
+#             description="Busca prototipos basado en criterios específicos como texto, categoría y tags")
+# async def search_prototypes(request: PrototypeSearchRequest):
+#     """
+#     Busca prototipos basándose en diferentes criterios de búsqueda.
+#     
+#     Permite combinar búsqueda por texto libre, categoría específica y tags.
+#     """
+#     try:
+#         category_filter = request.category.value if request.category else None
+#         
+#         results = prototype_manager.search_prototypes(
+#             query=request.query,
+#             category=category_filter,
+#             tags=request.tags
+#         )
+#         
+#         logger.info(f"Search completed: {len(results)} results for query '{request.query}'")
+#         
+#         return PrototypeSearchResponse(
+#             success=True,
+#             query=request.query,
+#             results_count=len(results),
+#             prototypes=results
+#         )
+#         
+#     except Exception as e:
+#         logger.error(f"Error searching prototypes: {str(e)}")
+#         raise HTTPException(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             detail=f"Failed to search prototypes: {str(e)}"
+#         )
 
 
 @router.get("/prototype/{prototype_id}",
@@ -295,118 +295,3 @@ async def delete_prototype(prototype_id: str):
         )
 
 
-@router.get("/prototype/stats",
-           response_model=PrototypeStatsResponse,
-           summary="Estadísticas de prototipos",
-           description="Obtiene estadísticas de uso y rendimiento de los prototipos")
-async def get_prototype_statistics():
-    """
-    Obtiene estadísticas completas sobre el uso de prototipos en el sistema.
-    """
-    try:
-        stats = prototype_manager.get_statistics()
-        
-        return PrototypeStatsResponse(
-            success=True,
-            statistics=stats
-        )
-        
-    except Exception as e:
-        logger.error(f"Error getting prototype statistics: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get prototype statistics: {str(e)}"
-        )
-
-
-@router.get("/prototype/categories",
-           response_model=PrototypeCategoriesResponse,
-           summary="Listar categorías disponibles",
-           description="Obtiene la lista de todas las categorías de prototipos disponibles")
-async def get_prototype_categories():
-    """
-    Lista todas las categorías de prototipos disponibles en el sistema.
-    """
-    try:
-        categories = prototype_manager.get_categories()
-        
-        return PrototypeCategoriesResponse(
-            success=True,
-            categories=categories
-        )
-        
-    except Exception as e:
-        logger.error(f"Error getting prototype categories: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get prototype categories: {str(e)}"
-        )
-
-
-@router.post("/prototype/from-resource",
-            response_model=PrototypeResponse,
-            status_code=status.HTTP_201_CREATED,
-            summary="Crear prototipo desde recurso por tipo",
-            description="Crea un prototipo desde un recurso específico identificado por proveedor y tipo")
-async def create_prototype_from_resource(request: ResourceToPrototypeRequest):
-    """
-    Crea un prototipo a partir de un recurso específico del sistema.
-    
-    Esta función busca el recurso en los servicios apropiados basándose
-    en el proveedor y tipo especificados.
-    """
-    try:
-        # Buscar el recurso directamente en el repositorio
-        resource = None
-        try:
-            resource = repository.get(request.resource_id)
-        except Exception:
-            resource = None
-        
-        if not resource:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Resource {request.resource_id} not found in {request.provider} {request.resource_type}"
-            )
-        
-        # Verificar que el recurso puede ser prototipo
-        if not hasattr(resource, 'can_be_cloned') or not resource.can_be_cloned():
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Resource {request.resource_id} cannot be used as prototype"
-            )
-        
-        # Crear el prototipo
-        prototype_id = prototype_manager.register_prototype(
-            prototype=resource,
-            name=request.prototype_name,
-            description=request.prototype_description,
-            category=request.prototype_category.value,
-            tags=request.prototype_tags or {}
-        )
-        
-        # Obtener detalles
-        prototype = prototype_manager.get_prototype(prototype_id)
-        prototype_details = {
-            "prototype_id": prototype_id,
-            "prototype_info": prototype.get_prototype_info(),
-            "metadata": prototype_manager._metadata[prototype_id].to_dict()
-        }
-        
-        logger.info(f"Prototype created from {request.provider} {request.resource_type}: {prototype_id}")
-        
-        return PrototypeResponse(
-            success=True,
-            message=f"Prototype '{request.prototype_name}' created from {request.provider} {request.resource_type}",
-            prototype_id=prototype_id,
-            prototype_details=prototype_details
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error creating prototype from resource: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to create prototype from resource: {str(e)}"
-        )

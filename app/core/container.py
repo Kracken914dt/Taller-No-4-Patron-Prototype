@@ -1,9 +1,9 @@
 from app.domain.services import VMService
-from app.infrastructure.repository import VMRepository
+from app.infrastructure.repository import repository
 
 # Contenedor simple para inyección de dependencias (DIP)
-_repo = VMRepository()
-_service = VMService(repo=_repo)
+# Usamos la MISMA instancia global de repositorio que utilizan los controladores
+_service = VMService(repo=repository)
 
 
 def get_vm_service() -> VMService:

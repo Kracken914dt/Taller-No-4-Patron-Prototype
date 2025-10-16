@@ -14,35 +14,35 @@ from app.infrastructure.logger import audit_log
 router = APIRouter()
 
 
-@router.post("/create", response_model=VMResponse)
-def create_vm(
-    payload: VMCreateRequest,
-    service: VMService = Depends(get_vm_service),
-):
-    try:
-        vm = service.create_vm(payload)
-        return VMResponse(success=True, vm=vm)
-    except ValueError as e:
-        # Log de error de validación sin datos sensibles
-        audit_log(
-            actor=payload.requested_by or "system",
-            action="create",
-            vm_id="n/a",
-            provider=payload.provider.value,
-            success=False,
-            details={"error": str(e)},
-        )
-        raise HTTPException(status_code=400, detail=str(e))
-    except Exception as e:
-        audit_log(
-            actor=payload.requested_by or "system",
-            action="create",
-            vm_id="n/a",
-            provider=payload.provider.value,
-            success=False,
-            details={"error": "internal_error"},
-        )
-        raise HTTPException(status_code=500, detail="Internal error")
+# @router.post("/create", response_model=VMResponse)
+# def create_vm(
+#     payload: VMCreateRequest,
+#     service: VMService = Depends(get_vm_service),
+# ):
+#     try:
+#         vm = service.create_vm(payload)
+#         return VMResponse(success=True, vm=vm)
+#     except ValueError as e:
+#         # Log de error de validación sin datos sensibles
+#         audit_log(
+#             actor=payload.requested_by or "system",
+#             action="create",
+#             vm_id="n/a",
+#             provider=payload.provider.value,
+#             success=False,
+#             details={"error": str(e)},
+#         )
+#         raise HTTPException(status_code=400, detail=str(e))
+#     except Exception as e:
+#         audit_log(
+#             actor=payload.requested_by or "system",
+#             action="create",
+#             vm_id="n/a",
+#             provider=payload.provider.value,
+#             success=False,
+#             details={"error": "internal_error"},
+#         )
+#         raise HTTPException(status_code=500, detail="Internal error")
 
 
 @router.post("/build", response_model=VMResponse)

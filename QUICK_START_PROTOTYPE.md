@@ -14,11 +14,6 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### 2️⃣ **Ejecutar Demo Completo**
-```bash
-# En otra terminal
-python demo_prototype.py
-```
 
 ### 3️⃣ **Acceder a Documentación Interactiva**
 Abrir en navegador: http://localhost:8000/docs
@@ -171,6 +166,7 @@ curl -X POST "http://localhost:8000/api/prototype/create" \
 curl -X POST "http://localhost:8000/api/prototype/clone/proto-12345678" \
      -H "Content-Type: application/json" \
      -d '{
+        "prototype_id": "proto-6ee7b92e" = del prototypo
        "new_name": "web-server-prod-03",
        "custom_tags": {
          "instance": "03",

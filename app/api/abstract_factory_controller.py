@@ -620,74 +620,74 @@ def delete_infrastructure(infrastructure_id: str):
         raise HTTPException(status_code=404, detail="Infraestructura no encontrada")
 
 
-@router.get("/infrastructure/examples", response_model=Dict[str, Any])
-def get_infrastructure_examples():
-    """
-    Obtiene ejemplos de configuración de infraestructura para diferentes proveedores.
-    """
-    examples = {
-        "aws": {
-            "provider": "aws",
-            "vm": {
-                "name": "web-server",
-                "config": {
-                    "instance_type": "t3.micro",
-                    "ami": "ami-0abcdef1234567890",
-                    "vpc_id": "vpc-12345",
-                    "region": "us-east-1",
-                    "security_groups": ["sg-web-servers"]
-                }
-            },
-            "database": {
-                "name": "app-db",
-                "config": {
-                    "engine": "mysql",
-                    "instance_class": "db.t3.micro",
-                    "allocated_storage": 20,
-                    "region": "us-east-1"
-                }
-            },
-            "storage": {
-                "name": "app-files",
-                "config": {
-                    "region": "us-east-1",
-                    "storage_class": "STANDARD",
-                    "versioning_enabled": True
-                }
-            }
-        },
-        "azure": {
-            "provider": "azure",
-            "vm": {
-                "name": "web-server",
-                "config": {
-                    "vm_size": "Standard_B1s",
-                    "image": "UbuntuLTS",
-                    "resource_group": "my-rg",
-                    "region": "eastus"
-                }
-            },
-            "database": {
-                "name": "app-db",
-                "config": {
-                    "tier": "Basic",
-                    "server_name": "mydbserver",
-                    "resource_group": "my-rg",
-                    "region": "eastus"
-                }
-            },
-            "storage": {
-                "name": "appfiles",
-                "config": {
-                    "region": "eastus",
-                    "account_type": "Standard_LRS",
-                    "access_tier": "Hot"
-                }
-            }
-        }
-    }
-    
-    return {
-        "description": "Example configurations for different cloud providers",
-        "examples": examples
-    }
+# @router.get("/infrastructure/examples", response_model=Dict[str, Any])
+# def get_infrastructure_examples():
+#     """
+#     Obtiene ejemplos de configuración de infraestructura para diferentes proveedores.
+#     """
+#     examples = {
+#         "aws": {
+#             "provider": "aws",
+#             "vm": {
+#                 "name": "web-server",
+#                 "config": {
+#                     "instance_type": "t3.micro",
+#                     "ami": "ami-0abcdef1234567890",
+#                     "vpc_id": "vpc-12345",
+#                     "region": "us-east-1",
+#                     "security_groups": ["sg-web-servers"]
+#                 }
+#             },
+#             "database": {
+#                 "name": "app-db",
+#                 "config": {
+#                     "engine": "mysql",
+#                     "instance_class": "db.t3.micro",
+#                     "allocated_storage": 20,
+#                     "region": "us-east-1"
+#                 }
+#             },
+#             "storage": {
+#                 "name": "app-files",
+#                 "config": {
+#                     "region": "us-east-1",
+#                     "storage_class": "STANDARD",
+#                     "versioning_enabled": True
+#                 }
+#             }
+#         },
+#         "azure": {
+#             "provider": "azure",
+#             "vm": {
+#                 "name": "web-server",
+#                 "config": {
+#                     "vm_size": "Standard_B1s",
+#                     "image": "UbuntuLTS",
+#                     "resource_group": "my-rg",
+#                     "region": "eastus"
+#                 }
+#             },
+#             "database": {
+#                 "name": "app-db",
+#                 "config": {
+#                     "tier": "Basic",
+#                     "server_name": "mydbserver",
+#                     "resource_group": "my-rg",
+#                     "region": "eastus"
+#                 }
+#             },
+#             "storage": {
+#                 "name": "appfiles",
+#                 "config": {
+#                     "region": "eastus",
+#                     "account_type": "Standard_LRS",
+#                     "access_tier": "Hot"
+#                 }
+#             }
+#         }
+#     }
+#     
+#     return {
+#         "description": "Example configurations for different cloud providers",
+#         "examples": examples
+#     }
