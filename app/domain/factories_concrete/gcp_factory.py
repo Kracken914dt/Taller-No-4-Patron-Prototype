@@ -19,15 +19,7 @@ class GCPCloudFactory(CloudAbstractFactory):
         ]
     
     def create_virtual_machine(self, name: str, config: Dict[str, Any]) -> VirtualMachine:
-        """
-        Crea una instancia de Compute Engine con la configuración especificada.
         
-        Args:
-            config: Configuración de la VM incluyendo machine_type, zone, etc.
-            
-        Returns:
-            ComputeEngineInstance: Nueva instancia de VM de GCP
-        """
         # Validar configuración específica de GCP
         self._validate_vm_config(config)
         config = config.copy()
@@ -40,15 +32,7 @@ class GCPCloudFactory(CloudAbstractFactory):
         return vm
     
     def create_database(self, name: str, config: Dict[str, Any]) -> Database:
-        """
-        Crea una instancia de Cloud SQL con la configuración especificada.
-        
-        Args:
-            config: Configuración de la base de datos incluyendo engine, tier, etc.
-            
-        Returns:
-            CloudSQLDatabase: Nueva instancia de base de datos de GCP
-        """
+       
         # Validar configuración específica de GCP
         self._validate_database_config(config)
         config = config.copy()
@@ -61,15 +45,7 @@ class GCPCloudFactory(CloudAbstractFactory):
         return database
     
     def create_load_balancer(self, name: str, config: Dict[str, Any]) -> LoadBalancer:
-        """
-        Crea un Load Balancer de GCP con la configuración especificada.
         
-        Args:
-            config: Configuración del load balancer incluyendo type, region, etc.
-            
-        Returns:
-            CloudLoadBalancer: Nueva instancia de load balancer de GCP
-        """
         # Validar configuración específica de GCP
         self._validate_load_balancer_config(config)
         config = config.copy()
@@ -154,8 +130,7 @@ class GCPCloudFactory(CloudAbstractFactory):
             raise ValueError(f"Engine de base de datos inválido para GCP: {config['engine']}")
     
     def _validate_load_balancer_config(self, config: Dict[str, Any]) -> None:
-        """Valida la configuración específica del Load Balancer de GCP"""
-        # Validar tipos de load balancer válidos
+
         valid_types = ["HTTP(S)", "TCP", "UDP", "SSL"]
         lb_type = config.get("type", "HTTP(S)")
         
@@ -163,8 +138,7 @@ class GCPCloudFactory(CloudAbstractFactory):
             raise ValueError(f"Tipo de load balancer inválido para GCP: {lb_type}")
     
     def _validate_storage_config(self, config: Dict[str, Any]) -> None:
-        """Valida la configuración específica de Cloud Storage"""
-        # Validar storage classes válidos
+  
         valid_storage_classes = ["STANDARD", "NEARLINE", "COLDLINE", "ARCHIVE"]
         storage_class = config.get("storage_class", "STANDARD")
         

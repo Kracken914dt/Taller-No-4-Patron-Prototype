@@ -1,14 +1,4 @@
-"""
-Factory Provider que implementa completamente el patrón Abstract Factory
-reemplazando el patrón Factory Method anterior.
 
-Este módulo implementa todos los principios SOLID:
-- SRP: Solo se encarga de proveer las factories correctas
-- OCP: Fácil añadir nuevos proveedores sin modificar código existente
-- LSP: Todas las factories implementan la misma interfaz
-- ISP: Interfaces segregadas por tipo de recurso
-- DIP: Depende de abstracciones, no de implementaciones concretas
-"""
 from typing import Dict, Type
 from enum import Enum
 from .abstractions.factory import CloudAbstractFactory
@@ -104,12 +94,10 @@ def create_cloud_factory(provider: CloudProvider) -> CloudAbstractFactory:
 
 
 def get_available_providers() -> list[str]:
-    """Función de conveniencia para obtener proveedores disponibles"""
     return _factory_provider.get_available_providers()
 
 
 def get_provider_capabilities(provider: CloudProvider) -> Dict[str, any]:
-    """Obtiene información detallada sobre las capacidades de un proveedor"""
     return _factory_provider.get_provider_capabilities(provider)
 
 

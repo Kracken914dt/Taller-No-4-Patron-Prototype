@@ -1,7 +1,4 @@
-"""
-Abstract Factory para crear familias de productos de cloud.
-Esta es la interfaz principal del patrón Abstract Factory.
-"""
+
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional
@@ -9,13 +6,6 @@ from .products import VirtualMachine, Database, LoadBalancer, Storage
 
 
 class CloudAbstractFactory(ABC):
-    """
-    Abstract Factory que define la interfaz para crear familias de productos
-    de cloud relacionados (VMs, Databases, Load Balancers, Storage).
-    
-    Cada proveedor de cloud (AWS, Azure, GCP, etc.) implementará esta interfaz
-    para crear productos específicos de su plataforma.
-    """
     
     @abstractmethod
     def create_virtual_machine(
